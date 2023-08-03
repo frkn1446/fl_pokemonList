@@ -1,24 +1,63 @@
+import 'package:fl_pokemon_list/utils/fetch_response.dart';
+import 'package:fl_pokemon_list/utils/pokemon_data.dart';
 import 'package:fl_pokemon_list/utils/pokemon_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class RootPage extends StatelessWidget {
-  final List<PokemonDisplayData>
-      pokemonList; // Burada pokemonData listesi bekliyoruz.
+class RootPage extends StatefulWidget {
+  final FetchResponse response;
 
-  RootPage({required this.pokemonList});
+  RootPage({required this.response});
+
+  @override
+  _RootPageState createState() => _RootPageState();
+}
+
+class _RootPageState extends State<RootPage> {
+  ScrollController _scrollController = ScrollController();
+  // ScrollController, ListView'in kaydırma durumunu izlemek için kullanılır.
+  List<PokemonDisplayData> pokemonList = [];
+  String nextUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    pokemonList = widget.response.pokemonList;
+    nextUrl = widget.response.nextUrl;
+    // ScrollController'a bir dinleyici ekleyerek kullanıcının listenin
+    //sonuna geldiğini algılamak için _onScroll fonksiyonunu çağırırız.
+  }
+
+  void _onScroll() async {
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels != 0) {
+      FetchResponse newResponse = await pokemonData().fetchData(nextUrl);
+      setState(() {
+        pokemonList.addAll(newResponse.pokemonList);
+        nextUrl = newResponse.nextUrl;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar(),
       body: ListView.builder(
+        controller: _scrollController, // ScrollController'ı ekliyoruz
         itemCount: pokemonList.length,
         itemBuilder: (context, index) {
           final PokemonDisplayData currentPokemon = pokemonList[index];
 
           return Card(
-            elevation: 0,
+            elevation: 10,
             margin: EdgeInsets.all(10),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -30,7 +69,6 @@ class RootPage extends StatelessWidget {
               ),
               child: ListTile(
                 title: Center(
-                  // Metni ortalamak için Center widget'ını kullanıyoruz.
                   child: Text(
                     currentPokemon.pokemonName,
                     style: TextStyle(

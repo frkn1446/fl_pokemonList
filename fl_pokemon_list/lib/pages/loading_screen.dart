@@ -14,11 +14,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    pokemonData().fetchData().then((fetchedPokemons) {
+    pokemonData()
+        .fetchData('https://pokeapi.co/api/v2/pokemon')
+        .then((fetchedResponse) {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => RootPage(pokemonList: fetchedPokemons),
+            builder: (context) => RootPage(response: fetchedResponse),
           ));
     });
     ;
