@@ -4,6 +4,8 @@ import 'package:fl_pokemon_list/utils/pokemon_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'pokemon_detail_page.dart';
+
 class RootPage extends StatefulWidget {
   final FetchResponse response;
 
@@ -79,7 +81,18 @@ class _RootPageState extends State<RootPage> {
                   ),
                 ),
                 onTap: () {
-                  // Burada tıklanan pokemonun detaylarına yönlendirebilirsiniz.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PokemonDetailPage(
+                        pokemonImageUrl: currentPokemon.pokemonImageUrl,
+                        pokemonImageUrl2: currentPokemon.pokemonImageUrl2,
+                        name: currentPokemon.pokemonName,
+                        height: currentPokemon.pokemonHeight,
+                        weight: currentPokemon.pokemonWeight,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),

@@ -2,14 +2,16 @@
 
 class PokemonDisplayData {
   String pokemonName;
-  // Image pokemonImage;
-  // int pokemonHeight;
-  // int pokemonWeight;
+  String pokemonImageUrl;
+  String pokemonImageUrl2;
+  int pokemonHeight;
+  int pokemonWeight;
 
   PokemonDisplayData({
     required this.pokemonName,
-    // required this.pokemonImage,
-    // required this.pokemonHeight,
-    // required this.pokemonWeight,
+    required this.pokemonImageUrl,
+    required this.pokemonImageUrl2,
+    required this.pokemonHeight,
+    required this.pokemonWeight,
   });
 }

@@ -19,11 +19,17 @@ class pokemonData {
       List<dynamic> results = decodedData['results'];
 
       for (var pokemonData in results) {
+        final details = await http.get(Uri.parse(pokemonData['url']));
+        String data2 = details.body;
+        var decodedDetail = jsonDecode(data2);
+
         PokemonDisplayData pokemon = PokemonDisplayData(
           pokemonName: pokemonData['name'],
-//  pokemonImage:,
-//  pokemonHeight:,
-//  pokemonWeight:,
+          pokemonImageUrl: decodedDetail['sprites']['front_shiny'],
+          pokemonImageUrl2: decodedDetail['sprites']['other']['home']
+              ['front_shiny'],
+          pokemonHeight: decodedDetail['height'],
+          pokemonWeight: decodedDetail['weight'],
         );
         fetchedList.add(pokemon);
         print(pokemon.pokemonName);
