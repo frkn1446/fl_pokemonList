@@ -16,28 +16,54 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+  getAppBar2() {
+    return AppBar(
+      backgroundColor: Colors.orange,
+      elevation: 10,
+      title: Text(
+        "Pokemons",
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      actions: [
+        // Eğer veri yükleniyor ise AppBar'ın sağında bir yükleniyor göstergesi göster
+        if (isLoading)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black)),
+          )
+      ],
+    );
+  }
+
   ScrollController _scrollController = ScrollController();
-  // ScrollController, ListView'in kaydırma durumunu izlemek için kullanılır.
   List<PokemonDisplayData> pokemonList = [];
   String nextUrl = "";
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     pokemonList = widget.response.pokemonList;
     nextUrl = widget.response.nextUrl;
-    // ScrollController'a bir dinleyici ekleyerek kullanıcının listenin
-    //sonuna geldiğini algılamak için _onScroll fonksiyonunu çağırırız.
   }
 
   void _onScroll() async {
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels != 0) {
+      setState(() {
+        isLoading =
+            true; // Veri yükleniyor olduğunda bu değeri true olarak ayarla
+      });
       FetchResponse newResponse = await pokemonData().fetchData(nextUrl);
       setState(() {
         pokemonList.addAll(newResponse.pokemonList);
         nextUrl = newResponse.nextUrl;
+        isLoading = false;
       });
     }
   }
@@ -51,7 +77,7 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar2(),
       body: ListView.builder(
         controller: _scrollController, // ScrollController'ı ekliyoruz
         itemCount: pokemonList.length,
@@ -101,18 +127,4 @@ class _RootPageState extends State<RootPage> {
       ),
     );
   }
-}
-
-getAppBar() {
-  return AppBar(
-    backgroundColor: Colors.orange,
-    elevation: 10,
-    title: Text(
-      "Pokemons",
-      style: TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
 }
