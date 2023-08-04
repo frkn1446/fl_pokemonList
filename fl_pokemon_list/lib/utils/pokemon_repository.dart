@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:fl_pokemon_list/utils/pokemon_model.dart';
 import 'package:http/http.dart' as http;
-
 import 'fetch_response.dart';
 
-class pokemonData {
+class PokemonRepository {
   Future<FetchResponse> fetchData(String _nextUrl) async {
     String apiUrl = _nextUrl;
     final response = await http.get(Uri.parse(apiUrl));

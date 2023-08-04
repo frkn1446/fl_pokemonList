@@ -1,10 +1,9 @@
 import 'package:fl_pokemon_list/utils/fetch_response.dart';
-import 'package:fl_pokemon_list/utils/pokemon_data.dart';
+import 'package:fl_pokemon_list/pages/pokemon_list_view.dart';
 import 'package:fl_pokemon_list/utils/pokemon_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import 'pokemon_detail_page.dart';
+import 'package:provider/provider.dart';
+import '../utils/pokemon_view_model.dart';
 
 class RootPage extends StatefulWidget {
   final FetchResponse response;
@@ -16,6 +15,8 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+  late final PokemonViewModel _viewModel;
+
   getAppBar2() {
     return AppBar(
       backgroundColor: Colors.orange,
@@ -29,7 +30,6 @@ class _RootPageState extends State<RootPage> {
         ),
       ),
       actions: [
-        // Eğer veri yükleniyor ise AppBar'ın sağında bir yükleniyor göstergesi göster
         if (isLoading)
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -47,6 +47,7 @@ class _RootPageState extends State<RootPage> {
   @override
   void initState() {
     super.initState();
+    _viewModel = Provider.of<PokemonViewModel>(context, listen: false);
     _scrollController.addListener(_onScroll);
     pokemonList = widget.response.pokemonList;
     nextUrl = widget.response.nextUrl;
@@ -56,10 +57,9 @@ class _RootPageState extends State<RootPage> {
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels != 0) {
       setState(() {
-        isLoading =
-            true; // Veri yükleniyor olduğunda bu değeri true olarak ayarla
+        isLoading = true;
       });
-      FetchResponse newResponse = await pokemonData().fetchData(nextUrl);
+      FetchResponse newResponse = await _viewModel.fetchPokemons(nextUrl);
       setState(() {
         pokemonList.addAll(newResponse.pokemonList);
         nextUrl = newResponse.nextUrl;
@@ -78,52 +78,9 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar2(),
-      body: ListView.builder(
-        controller: _scrollController, // ScrollController'ı ekliyoruz
-        itemCount: pokemonList.length,
-        itemBuilder: (context, index) {
-          final PokemonDisplayData currentPokemon = pokemonList[index];
-
-          return Card(
-            elevation: 10,
-            margin: EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 247, 171, 90),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: ListTile(
-                title: Center(
-                  child: Text(
-                    currentPokemon.pokemonName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PokemonDetailPage(
-                        pokemonImageUrl: currentPokemon.pokemonImageUrl,
-                        pokemonImageUrl2: currentPokemon.pokemonImageUrl2,
-                        name: currentPokemon.pokemonName,
-                        height: currentPokemon.pokemonHeight,
-                        weight: currentPokemon.pokemonWeight,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
+      body: PokemonListView(
+        pokemonList: pokemonList,
+        scrollController: _scrollController,
       ),
     );
   }

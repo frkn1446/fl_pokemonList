@@ -1,5 +1,3 @@
-//import 'package:flutter/widgets.dart';
-
 class PokemonDisplayData {
   String pokemonName;
   String pokemonImageUrl;
