@@ -8,7 +8,26 @@ class PokemonViewModel extends ChangeNotifier {
   final ScrollController _scrollController = ScrollController();
   List<PokemonDisplayData> pokemonList = [];
   String nextUrl = "";
-  bool isLoading = false;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool isAtBottom = false; // Liste sonunda olduğunu belirten durum değişkeni
+
+  void checkIsAtBottom() {
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels != 0) {
+      isAtBottom = true;
+    } else {
+      isAtBottom = false;
+    }
+    notifyListeners();
+  }
 
   ScrollController get scrollController => _scrollController;
 

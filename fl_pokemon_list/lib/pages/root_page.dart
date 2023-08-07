@@ -29,14 +29,6 @@ class _RootPageState extends State<RootPage> {
           color: Colors.black,
         ),
       ),
-      actions: [
-        if (isLoading)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black)),
-          )
-      ],
     );
   }
 
@@ -44,6 +36,7 @@ class _RootPageState extends State<RootPage> {
   List<PokemonDisplayData> pokemonList = [];
   String nextUrl = "";
   bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -78,9 +71,22 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar2(),
-      body: PokemonListView(
-        pokemonList: pokemonList,
-        scrollController: _scrollController,
+      body: Column(
+        children: [
+          Expanded(
+            child: PokemonListView(
+              pokemonList: pokemonList,
+              // Bu satıra dikkat edin. ScrollController'ı ListView'a değil dışındaki Column'a aktardık.
+              scrollController: _scrollController,
+            ),
+          ),
+          if (isLoading)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.black)),
+            )
+        ],
       ),
     );
   }

@@ -14,61 +14,62 @@ class PokemonDetailPage extends StatelessWidget {
     required this.height,
     required this.weight,
   });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Sol üstte normal boyutta pokemonImageUrl fotoğrafı
-            Container(
-              width: MediaQuery.of(context).size.width * 0.4,
-              height: MediaQuery.of(context).size.width * 0.4,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(pokemonImageUrl),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Sol üstte normal boyutta pokemonImageUrl fotoğrafı
+              Container(
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.width * 0.4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(pokemonImageUrl),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            // Altında büyük şekilde pokemonImageUrl2 fotoğrafı
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.width * 0.8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(pokemonImageUrl2),
+              SizedBox(height: 20),
+              // Altında büyük şekilde pokemonImageUrl2 fotoğrafı
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.width * 0.8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(pokemonImageUrl2),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            // İsim
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 20),
+              // İsim
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            // Boy
-            Text(
-              "Height: $height",
-              style: TextStyle(fontSize: 18),
-            ),
-            // Ağırlık
-            Text(
-              "Weight: $weight",
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
+              SizedBox(height: 10),
+              // Boy
+              Text(
+                "Height: $height",
+                style: TextStyle(fontSize: 18),
+              ),
+              // Ağırlık
+              Text(
+                "Weight: $weight",
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
         ),
       ),
     );
